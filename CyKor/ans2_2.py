@@ -1,0 +1,38 @@
+from Crypto.Util.number import long_to_bytes, bytes_to_long
+import gmpy2
+N = 9931755185060178541819350703860525202998395176620817326533726321103289514714482398301463938123540046323657927466230539048399765245482297315320621294942552040969779600220746703802727865488282400532525716200713822333260195215975219729008945628323420484667363474732308988705045216466104088114390575938974751250735732965167191025807650844438927688743083443181909932562840801876087928020419912615909929547090716236393628363582762357491323519758592285176474021090624649128022651674058738105123425788673915904447407748389441605828693561972112169848435886546096942841894411370737399277884692796708444598630421441967316945299
+e = 0x10001
+f = open('enc.txt')
+cipher = f.readlines()
+
+jacob = [0 for i in range(128)]
+given = 'KOREA{WOW!!_You_'
+given = bin(bytes_to_long(given))[2:].rjust(128, '0')
+
+cipher.append('0')
+for i in range(128):
+    t = given[(i-128) % 128]
+    if(i % 8 == 0):
+        jacob[127-i] = 0
+    elif(t == '0'):
+        jacob[127-i] = gmpy2.jacobi(int(cipher[((i+1) * -1)]), N) * 1
+    else:
+        jacob[127-i] = gmpy2.jacobi(int(cipher[(i+1) * -1]), N) * -1
+
+
+mes = ''
+
+check = 8
+for i in range(0, len(cipher)):
+    if (i % 8 == 7):
+        mes = '0' + mes
+        check += 1
+        continue
+    jacobi = gmpy2.jacobi(int(cipher[i]), N) * jacob[check % 128]
+    check += 1
+    if (jacobi == 1):
+        mes = '0' + mes
+    else:
+        mes = '1' + mes
+flag = long_to_bytes(int(mes, 2))
+print flag
