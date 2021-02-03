@@ -25,8 +25,6 @@ def exp(k,i):
         sum = product[sum][k]
     return sum
 
-
-T = []
 for key in key_set:
     T = []
     for i in range(51):
@@ -47,7 +45,10 @@ for key in key_set:
             t1 = Matrix[j][i]
             t2 = Matrix[j+1][i]
             for k in range(i,52):
-                Matrix[j][k] =  nim_mul(Matrix[j][k],t2) ^ nim_mul(Matrix[j+1][k],t1)          
+                Matrix[j][k] =  nim_mul(Matrix[j][k],t2) ^ nim_mul(Matrix[j+1][k],t1)   
+    print(Matrix[0])
+    print(Matrix[49])
+    print(Matrix[50])
     flag = []
     A = ''
     for i in range(51):
@@ -58,11 +59,13 @@ for key in key_set:
             tmp = nim_mul(tmp,flag[j])
             ans = ans ^ tmp
         q = nim_div(ans,c[-2-len(flag)])
+        #print(chr(q))
         flag.append(q)
         A += chr(q)
         if(A[0] != 'f'):
             break
     if len(flag) >  50:
-        print(A)
-
+        #print(A)
+        print(flag)
+        print(len(flag))
 #flag{did_you_solve_with_dft_or_lagrange_polynomial}
